@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>周哈里心窗解密島 - 主廚的跨文化融合實驗室</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- html2canvas for card download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Google Font: Noto Sans TC & Fredoka -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            500: '#f97316',
+                            600: '#ea580c',
+                            700: '#c2410c',
+                            800: '#9a3412',
+                        },
+                        culture: {
+                            teal: '#0d9488',
+                            purple: '#7e22ce',
+                            amber: '#d97706',
+                            rose: '#e11d48'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans TC', 'sans-serif'],
+                        display: ['Fredoka', 'Noto Sans TC', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .chef-badge {
+            background: linear-gradient(135deg, #f97316 0%, #fbbf24 100%);
+        }
+        .step-active {
+            border-color: #f97316;
+            background-color: #fff7ed;
+            color: #ea580c;
+        }
+        .card-border-gold {
+            border: 4px solid #f59e0b;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <!-- Header Navbar -->
+    <header class="bg-slate-900 text-white sticky top-0 z-40 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full chef-badge flex items-center justify-center text-white text-xl font-bold shadow">
+                    <i class="fa-solid fa-utensils"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight tracking-wide">周哈里心窗解密島</h1>
+                    <p class="text-xs text-slate-400">關卡 2：主廚的跨文化融合實驗室 Cross-Cultural Chef Lab</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <button onclick="openTeacherModal()" class="text-xs bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                    <span>教師指引與討論</span>
+                </button>
+                <button onclick="resetGame()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg flex items-center space-x-1 transition">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span>重來</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-5xl mx-auto px-4 py-8 flex-1 w-full">
+
+        <!-- Stepper Navigation -->
+        <div class="mb-8">
+            <div class="grid grid-cols-3 gap-2 sm:gap-4 text-center">
+                <div id="step-btn-1" class="step-active border-2 rounded-xl p-3 flex flex-col items-center transition-all cursor-pointer" onclick="goToStep(1)">
+                    <div class="w-7 h-7 rounded-full bg-orange-500 text-white text-xs font-bold flex items-center justify-center mb-1">1</div>
+                    <span class="text-xs sm:text-sm font-bold">選定文化與食材</span>
+                </div>
+                <div id="step-btn-2" class="border-2 border-slate-200 bg-white rounded-xl p-3 flex flex-col items-center opacity-60 transition-all cursor-pointer" onclick="goToStep(2)">
+                    <div class="w-7 h-7 rounded-full bg-slate-300 text-slate-700 text-xs font-bold flex items-center justify-center mb-1">2</div>
+                    <span class="text-xs sm:text-sm font-bold">發想法則組合</span>
+                </div>
+                <div id="step-btn-3" class="border-2 border-slate-200 bg-white rounded-xl p-3 flex flex-col items-center opacity-60 transition-all cursor-pointer" onclick="goToStep(3)">
+                    <div class="w-7 h-7 rounded-full bg-slate-300 text-slate-700 text-xs font-bold flex items-center justify-center mb-1">3</div>
+                    <span class="text-xs sm:text-sm font-bold">菜卡創作與理念</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 1: Country & Feature Selection -->
+        <section id="step-1" class="space-y-6">
+            <div class="bg-gradient-to-r from-orange-500 to-amber-500 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                <div class="relative z-10">
+                    <span class="inline-block bg-white/20 text-white text-xs px-3 py-1 rounded-full font-semibold mb-2">關卡 1：國家與特色選定</span>
+                    <h2 class="text-2xl font-bold mb-2">請選擇兩個國家進行融合實驗</h2>
+                    <p class="text-orange-100 text-sm">無國界美食展需要你的創意！請點擊選擇 <strong>主要國家 A</strong> 與 <strong>搭配國家 B</strong>，並觀察其經典食材與烹調風格。</p>
+                </div>
+                <i class="fa-solid fa-earth-americas text-white/10 text-9xl absolute -right-6 -bottom-8 pointer-events-none"></i>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Select Country A -->
+                <div class="glass-card rounded-2xl p-5 shadow-sm border border-slate-200">
+                    <div class="flex items-center justify-between mb-4 border-b pb-3">
+                        <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-orange-500 text-white flex items-center justify-center text-xs">A</span>
+                            選擇「國家 A」（基底文化）
+                        </h3>
+                        <span id="country-a-tag" class="text-xs font-bold text-orange-600 bg-orange-100 px-2.5 py-1 rounded-full">已選擇：台灣</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3" id="country-a-grid">
+                        <!-- JS injected dynamically -->
+                    </div>
+                </div>
+
+                <!-- Select Country B -->
+                <div class="glass-card rounded-2xl p-5 shadow-sm border border-slate-200">
+                    <div class="flex items-center justify-between mb-4 border-b pb-3">
+                        <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-teal-600 text-white flex items-center justify-center text-xs">B</span>
+                            選擇「國家 B」（融合文化）
+                        </h3>
+                        <span id="country-b-tag" class="text-xs font-bold text-teal-600 bg-teal-100 px-2.5 py-1 rounded-full">已選擇：義大利</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3" id="country-b-grid">
+                        <!-- JS injected dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Country Detailed Analysis Preview -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div id="country-a-detail" class="bg-white rounded-xl p-4 border border-orange-200 shadow-sm">
+                    <!-- Dynamic Content -->
+                </div>
+                <div id="country-b-detail" class="bg-white rounded-xl p-4 border border-teal-200 shadow-sm">
+                    <!-- Dynamic Content -->
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-4">
+                <button onclick="validateAndGoToStep(2)" class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-8 py-3 rounded-xl shadow-md transition flex items-center space-x-2">
+                    <span>下一步：前往法則組合實驗室</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- STEP 2: Creative Formula Combo -->
+        <section id="step-2" class="space-y-6 hidden">
+            <div class="bg-gradient-to-r from-teal-600 to-emerald-600 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                <div class="relative z-10">
+                    <span class="inline-block bg-white/20 text-white text-xs px-3 py-1 rounded-full font-semibold mb-2">關卡 2：發想法則組合</span>
+                    <h2 class="text-2xl font-bold mb-2">應用「異國創意風味料理三法則」</h2>
+                    <p class="text-teal-100 text-sm">挑選你的食材替代、風味添加與烹調法。試著創造有文化脈絡且不突兀的絕妙搭配！</p>
+                </div>
+                <i class="fa-solid fa-flask text-white/10 text-9xl absolute -right-6 -bottom-8 pointer-events-none"></i>
+            </div>
+
+            <!-- The Three Formulas Selection -->
+            <div class="space-y-6">
+                <!-- 1. Substitution Rule -->
+                <div class="glass-card rounded-2xl p-5 border-l-8 border-l-orange-500 shadow-sm">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-right-left"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800">法則一：替代法則 (Substitution)</h3>
+                            <p class="text-xs text-slate-500">用國家 B 的特色食材替換國家 A 傳統料理中的某個經典元素（例如：用水餃皮替代披薩皮）</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">選擇被替代的 <span id="label-country-a-sub">國家 A</span> 元素：</label>
+                            <select id="sub-base-select" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none" onchange="updateFormulaSummary()">
+                                <!-- Dynamic Options -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">替換為 <span id="label-country-b-sub">國家 B</span> 的食材：</label>
+                            <select id="sub-target-select" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none" onchange="updateFormulaSummary()">
+                                <!-- Dynamic Options -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Addition Rule -->
+                <div class="glass-card rounded-2xl p-5 border-l-8 border-l-teal-500 shadow-sm">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="w-8 h-8 rounded-lg bg-teal-100 text-teal-600 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-plus"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800">法則二：添加特色 (Addition)</h3>
+                            <p class="text-xs text-slate-500">保留核心結構，添加標誌性的調味、醬料或佐料（例如：加入韓式泡菜、起司、松露）</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <label class="block text-xs font-bold text-slate-600 mb-1">選擇要添加的獨特風味佐料：</label>
+                        <select id="add-feature-select" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-teal-500 outline-none" onchange="updateFormulaSummary()">
+                            <!-- Dynamic Options -->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 3. Cooking Technique Rule -->
+                <div class="glass-card rounded-2xl p-5 border-l-8 border-l-purple-500 shadow-sm">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-fire-burner"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800">法則三：料理法則 (Cooking Technique)</h3>
+                            <p class="text-xs text-slate-500">選擇這道融合料理所採用的核心烹調手法（例如：炸、烤、低溫慢煮、窯烤、清蒸）</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <label class="block text-xs font-bold text-slate-600 mb-1">選擇融合料理的烹調方式：</label>
+                        <select id="technique-select" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-purple-500 outline-none" onchange="updateFormulaSummary()">
+                            <!-- Dynamic Options -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formula Real-time Preview Box -->
+            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5">
+                <h4 class="font-bold text-amber-800 text-sm mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    當前融合實驗配方總覽
+                </h4>
+                <div id="formula-preview-text" class="text-slate-700 text-sm font-medium leading-relaxed">
+                    <!-- Dynamic formula preview -->
+                </div>
+            </div>
+
+            <div class="flex justify-between pt-4">
+                <button onclick="goToStep(1)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-6 py-3 rounded-xl transition">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> 上一步
+                </button>
+                <button onclick="validateAndGoToStep(3)" class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-8 py-3 rounded-xl shadow-md transition flex items-center space-x-2">
+                    <span>下一步：設計菜單與撰寫理念</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- STEP 3: Dish Card Creation & Culture Philosophy -->
+        <section id="step-3" class="space-y-6 hidden">
+            <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                <div class="relative z-10">
+                    <span class="inline-block bg-white/20 text-white text-xs px-3 py-1 rounded-full font-semibold mb-2">關卡 3：菜卡製作與理念說明</span>
+                    <h2 class="text-2xl font-bold mb-2">為你的跨文化創意料理發聲</h2>
+                    <p class="text-purple-100 text-sm">給料理取一個充滿吸引力的名字，並說明兩種文化如何在你的這道料理中相互尊重與展現魅力。</p>
+                </div>
+                <i class="fa-solid fa-pen-nib text-white/10 text-9xl absolute -right-6 -bottom-8 pointer-events-none"></i>
+            </div>
+
+            <div class="glass-card rounded-2xl p-6 shadow-sm space-y-5">
+                <div>
+                    <label class="block font-bold text-slate-800 text-sm mb-1">1. 創意料理命名 <span class="text-rose-500">*</span></label>
+                    <input type="text" id="dish-name-input" placeholder="例如：台義交響曲 — 三杯九層塔莫札瑞拉窯烤披薩" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-purple-500 outline-none font-bold">
+                    <p class="text-xs text-slate-400 mt-1">提示：融合兩國文化要素或風味特色命名，更有代表性！</p>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-800 text-sm mb-1">2. 實習主廚姓名 / 暱稱 <span class="text-rose-500">*</span></label>
+                    <input type="text" id="chef-name-input" placeholder="例如：小明主廚" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-purple-500 outline-none">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-800 text-sm mb-1">3. 跨文化交流理念說明 <span class="text-rose-500">*</span></label>
+                    <textarea id="dish-concept-input" rows="4" placeholder="請說明：這道料理如何展現兩種文化的融合？你如何兼顧文化代表性與創意，而不是隨意混搭？" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-purple-500 outline-none"></textarea>
+                    <div class="bg-purple-50 p-3 rounded-lg border border-purple-100 mt-2 text-xs text-purple-700 flex items-start gap-2">
+                        <i class="fa-solid fa-lightbulb mt-0.5 text-purple-500"></i>
+                        <span><strong>評價標準提示：</strong>合理的融合應保留文化的靈魂風格，並透過替代與添加法則找到味覺平衡，展現對異國飲食傳統的尊重與理解。</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between pt-4">
+                <button onclick="goToStep(2)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-6 py-3 rounded-xl transition">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> 上一步
+                </button>
+                <button onclick="generateFinalCard()" class="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold px-8 py-3 rounded-xl shadow-lg transition flex items-center space-x-2 transform hover:scale-105">
+                    <i class="fa-solid fa-certificate"></i>
+                    <span>生成數位跨文化創意菜卡</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- STEP 4: RESULT PAGE & DIGITAL DISH CARD -->
+        <section id="step-result" class="space-y-6 hidden">
+            <div class="text-center space-y-2 mb-4">
+                <span class="bg-emerald-100 text-emerald-700 font-bold text-xs px-4 py-1.5 rounded-full inline-block">
+                    <i class="fa-solid fa-check-circle mr-1"></i> 跨文化融合實驗成功！
+                </span>
+                <h2 class="text-3xl font-black text-slate-800">您的數位跨文化創意菜卡已生成</h2>
+                <p class="text-slate-500 text-sm">系統已完成文化融合合理度與法則應用評估。</p>
+            </div>
+
+            <!-- Score / Badge Summary Banner -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center space-x-4">
+                    <div class="w-16 h-16 rounded-2xl bg-amber-100 border-2 border-amber-400 flex items-center justify-center text-amber-600 text-3xl font-black shadow-inner" id="fusion-score-badge">
+                        A+
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-lg" id="score-title">高脈絡尊重之融合料理</h4>
+                        <p class="text-xs text-slate-500" id="score-desc">成功掌握文化符碼與風味互補法則，符合無國界世界美食展展出標準！</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <button onclick="downloadCardAsImage()" class="flex-1 md:flex-none bg-orange-500 hover:bg-orange-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm shadow transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-download"></i>
+                        <span>下載菜卡 PNG</span>
+                    </button>
+                    <button onclick="window.print()" class="flex-1 md:flex-none bg-slate-800 hover:bg-slate-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm shadow transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-print"></i>
+                        <span>列印</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- DIGITAL DISH CARD CONTAINER (Target for html2canvas) -->
+            <div class="flex justify-center my-6">
+                <div id="digital-dish-card" class="w-full max-w-xl bg-slate-900 text-white rounded-3xl p-8 card-border-gold relative overflow-hidden shadow-2xl">
+                    <!-- Background Decorative Pattern -->
+                    <div class="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-orange-500/10 blur-2xl pointer-events-none"></div>
+                    <div class="absolute -left-16 -bottom-16 w-48 h-48 rounded-full bg-teal-500/10 blur-2xl pointer-events-none"></div>
+
+                    <!-- Header -->
+                    <div class="flex justify-between items-start border-b border-slate-800 pb-4 mb-6">
+                        <div>
+                            <span class="text-xs font-bold tracking-wider text-amber-400 uppercase">Cross-Cultural Chef Lab</span>
+                            <h3 class="text-2xl font-black text-amber-100 tracking-wide mt-1" id="card-dish-name">台義三杯燉飯</h3>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-1 rounded border border-slate-700">證書號: #LAB-<span id="card-random-id">8839</span></span>
+                            <p class="text-xs text-orange-400 font-bold mt-1" id="card-chef-name">主廚：小明</p>
+                        </div>
+                    </div>
+
+                    <!-- Cultural Fusion Badges -->
+                    <div class="flex items-center justify-center space-x-3 my-4 bg-slate-800/80 p-3 rounded-2xl border border-slate-700/50">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xl" id="card-flag-a">🇹🇼</span>
+                            <span class="text-xs font-bold text-slate-200" id="card-country-a">台灣</span>
+                        </div>
+                        <i class="fa-solid fa-xmark text-xs text-amber-400"></i>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xl" id="card-flag-b">🇮🇹</span>
+                            <span class="text-xs font-bold text-slate-200" id="card-country-b">義大利</span>
+                        </div>
+                    </div>
+
+                    <!-- Applied Rules Breakdown -->
+                    <div class="space-y-2 mb-6 text-xs">
+                        <div class="bg-slate-800/50 p-2.5 rounded-xl border border-slate-700 flex items-center justify-between">
+                            <span class="text-slate-400 font-medium"><i class="fa-solid fa-right-left text-orange-400 mr-1.5"></i>替代法則：</span>
+                            <span class="font-bold text-orange-200" id="card-rule-sub">水餃皮 ➔ 披薩底座</span>
+                        </div>
+                        <div class="bg-slate-800/50 p-2.5 rounded-xl border border-slate-700 flex items-center justify-between">
+                            <span class="text-slate-400 font-medium"><i class="fa-solid fa-plus text-teal-400 mr-1.5"></i>添加特色：</span>
+                            <span class="font-bold text-teal-200" id="card-rule-add">九層塔香氣</span>
+                        </div>
+                        <div class="bg-slate-800/50 p-2.5 rounded-xl border border-slate-700 flex items-center justify-between">
+                            <span class="text-slate-400 font-medium"><i class="fa-solid fa-fire-burner text-purple-400 mr-1.5"></i>料理法則：</span>
+                            <span class="font-bold text-purple-200" id="card-rule-tech">石窯烘烤</span>
+                        </div>
+                    </div>
+
+                    <!-- Philosophy Statement -->
+                    <div class="mb-6">
+                        <h4 class="text-xs font-bold text-amber-300 uppercase tracking-wider mb-1.5">跨文化交流理念 Statement of Philosophy</h4>
+                        <p class="text-xs text-slate-300 leading-relaxed bg-slate-950/60 p-3.5 rounded-xl border border-slate-800 italic" id="card-concept">
+                            「這道料理結合了台灣三杯塔草香氣與義大利窯烤技術，讓在地食材在經典西式載體上發光發熱。」
+                        </p>
+                    </div>
+
+                    <!-- Card Footer Stamp -->
+                    <div class="flex items-center justify-between pt-4 border-t border-slate-800/80 text-[10px] text-slate-500">
+                        <span>周哈里心窗解密島 · 跨文化學習模組</span>
+                        <span class="text-amber-500/80 font-bold">✨ 無國界美食展認證菜品</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center pt-2">
+                <button onclick="resetGame()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-8 py-3 rounded-xl transition flex items-center gap-2">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span>挑戰下一道融合料理</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- TEACHER DISCUSSION MODAL -->
+    <div id="teacher-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-chalkboard-user text-amber-500"></i>
+                    教師課後討論與倫理反思指引
+                </h3>
+                <button onclick="closeTeacherModal()" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 text-xs sm:text-sm text-slate-700 leading-relaxed">
+                <div class="bg-amber-50 p-4 rounded-xl border border-amber-200">
+                    <h4 class="font-bold text-amber-900 mb-1">🎯 本單元核心教學討論重點</h4>
+                    <p class="text-amber-800">「如何區分『有文化脈絡的尊重融合』與『不尊重傳統的隨意混搭』？」</p>
+                </div>
+
+                <div class="space-y-2">
+                    <h4 class="font-bold text-slate-900">💡 課後討論引導題綱：</h4>
+                    <ul class="list-disc pl-5 space-y-1.5 text-slate-600">
+                        <li><strong>文化意涵探索：</strong>當我們把某個國家的神聖食材或傳統醬料隨意加入無關的料理中，當地人可能會有什麼感受？</li>
+                        <li><strong>飲食邏輯審視：</strong>你的創意組合在味覺、口感與烹調科學上是和諧的嗎？還是純粹為了惡搞與獵奇？</li>
+                        <li><strong>周哈里心窗連結：</strong>盲目混搭常源於對異國文化的「盲目區 (Blind Spot)」；而透過學習料理法則，我們能打開「開放區 (Open Area)」，增進真正的跨文化理解。</li>
+                    </ul>
+                </div>
+
+                <div class="bg-slate-100 p-3.5 rounded-xl border border-slate-200">
+                    <h4 class="font-bold text-slate-800 mb-1">⚠️ 防範「食物惡搞刻板印象」教學提點</h4>
+                    <p class="text-slate-600 text-xs">若學生選擇極端不搭調的組合（如珍珠奶茶炒豬腳），教師可引導其思考：「這種組合是在展現文化優點，還是無意中強化了食物惡搞的刻板印象？」</p>
+                </div>
+            </div>
+
+            <div class="pt-2 text-right border-t">
+                <button onclick="closeTeacherModal()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-5 py-2 rounded-lg text-sm transition">
+                    了解並返回
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Data Store: Country Profiles & Ingredients
+        const countriesData = {
+            tw: {
+                name: '台灣',
+                flag: '🇹🇼',
+                style: '講究鹹香、紅燒、三杯與九層塔特有香氣',
+                bases: ['水餃皮', '米飯 / 飯糰', '刈包', '麵線'],
+                additions: ['九層塔醬', '三杯醬汁', '黑糖珍珠', '油蔥酥'],
+                techniques: ['大火快炒', '三杯燜煮', '清蒸', '鹽酥深炸']
+            },
+            it: {
+                name: '義大利',
+                flag: '🇮🇹',
+                style: '注重橄欖油原味、番茄酸甜與起司香濃',
+                bases: ['披薩餅皮', '義大利麵', '燉飯米 (Arborio)', '意式長棍麵包'],
+                additions: ['莫札瑞拉起司', '羅勒青醬', '松露油', '帕瑪森起司'],
+                techniques: ['石窯烘烤', '低溫慢燉', '香煎', '風乾熟成']
+            },
+            jp: {
+                name: '日本',
+                flag: '🇯🇵',
+                style: '追求柴魚高湯鮮味、抹茶清香與極致食材原味',
+                bases: ['拉麵', '壽司米飯', '烏龍麵', '海苔包飯'],
+                additions: ['芥末醬', '日式味噌', '抹茶粉', '柴魚花'],
+                techniques: ['天婦羅酥炸', '日式炙燒', '高湯熬燉', '生食刺身']
+            },
+            mx: {
+                name: '墨西哥',
+                flag: '🇲🇽',
+                style: '強調玉米餅香氣、辣椒辛香與檸檬酸爽',
+                bases: ['玉米塔可餅皮 (Tortilla)', '玉米片 (Nacho)', '黑豆飯'],
+                additions: ['莎莎醬 (Salsa)', '墨西哥辣椒 (Jalapeño)', '酪梨醬 (Guacamole)'],
+                techniques: ['炭火直烤', '慢火燉肉 (Carnitas)', '烘烤']
+            },
+            kr: {
+                name: '韓國',
+                flag: '🇰🇷',
+                style: '濃郁發酵辣醬、麻油香氣與醃漬風味',
+                bases: ['韓式年糕', '紫菜包飯底', '韓式冷麵'],
+                additions: ['韓式泡菜', '辣炒年糕醬', '韓式芝麻油'],
+                techniques: ['銅盤鐵板燒', '韓式辣燉', '醃漬醃製']
+            },
+            fr: {
+                name: '法國',
+                flag: '🇫🇷',
+                style: '優雅奶油醬汁、紅酒提味與細緻烹調',
+                bases: ['法式長棍麵包', '可頌法式酥皮', '馬鈴薯泥'],
+                additions: ['法式奶油醬', '松露白醬', '波爾多紅酒醬'],
+                techniques: ['舒適低溫慢煮 (Sous-vide)', '奶油香煎', '酥皮烘烤']
+            }
+        };
+
+        // Current Application State
+        let state = {
+            currentStep: 1,
+            countryA: 'tw',
+            countryB: 'it',
+            subBase: '',
+            subTarget: '',
+            addFeature: '',
+            technique: '',
+            dishName: '',
+            chefName: '',
+            concept: ''
+        };
+
+        window.onload = function() {
+            renderCountryGrids();
+            updateCountryDetails();
+            populateFormulaDropdowns();
+            updateFormulaSummary();
+        };
+
+        function renderCountryGrids() {
+            const gridA = document.getElementById('country-a-grid');
+            const gridB = document.getElementById('country-b-grid');
+            gridA.innerHTML = '';
+            gridB.innerHTML = '';
+
+            Object.keys(countriesData).forEach(key => {
+                const c = countriesData[key];
+                
+                // Card A
+                const btnA = document.createElement('button');
+                btnA.className = `p-3 rounded-xl border text-left transition flex items-center space-x-2 ${state.countryA === key ? 'bg-orange-50 border-orange-500 font-bold text-orange-700 shadow-sm' : 'bg-white border-slate-200 hover:bg-slate-50'}`;
+                btnA.onclick = () => selectCountry('A', key);
+                btnA.innerHTML = `<span class="text-2xl">${c.flag}</span> <span class="text-sm">${c.name}</span>`;
+                gridA.appendChild(btnA);
+
+                // Card B
+                const btnB = document.createElement('button');
+                btnB.className = `p-3 rounded-xl border text-left transition flex items-center space-x-2 ${state.countryB === key ? 'bg-teal-50 border-teal-500 font-bold text-teal-700 shadow-sm' : 'bg-white border-slate-200 hover:bg-slate-50'}`;
+                btnB.onclick = () => selectCountry('B', key);
+                btnB.innerHTML = `<span class="text-2xl">${c.flag}</span> <span class="text-sm">${c.name}</span>`;
+                gridB.appendChild(btnB);
+            });
+        }
+
+        function selectCountry(type, code) {
+            if (type === 'A') {
+                if (code === state.countryB) {
+                    alert('主要國家 A 與搭配國家 B 不能相同喔！請選擇不同文化進行融合。');
+                    return;
+                }
+                state.countryA = code;
+            } else {
+                if (code === state.countryA) {
+                    alert('主要國家 A 與搭配國家 B 不能相同喔！請選擇不同文化進行融合。');
+                    return;
+                }
+                state.countryB = code;
+            }
+            
+            renderCountryGrids();
+            updateCountryDetails();
+            populateFormulaDropdowns();
+            updateFormulaSummary();
+        }
+
+        function updateCountryDetails() {
+            const cA = countriesData[state.countryA];
+            const cB = countriesData[state.countryB];
+
+            document.getElementById('country-a-tag').innerText = `已選擇：${cA.name} ${cA.flag}`;
+            document.getElementById('country-b-tag').innerText = `已選擇：${cB.name} ${cB.flag}`;
+
+            document.getElementById('country-a-detail').innerHTML = `
+                <div class="flex items-center space-x-2 mb-2">
+                    <span class="text-2xl">${cA.flag}</span>
+                    <h4 class="font-bold text-slate-800 text-sm">${cA.name}飲食文化風格</h4>
+                </div>
+                <p class="text-xs text-slate-600 mb-2">${cA.style}</p>
+                <div class="text-[11px] text-slate-500">
+                    <span class="font-bold text-orange-600">經典載體：</span>${cA.bases.join('、')}
+                </div>
+            `;
+
+            document.getElementById('country-b-detail').innerHTML = `
+                <div class="flex items-center space-x-2 mb-2">
+                    <span class="text-2xl">${cB.flag}</span>
+                    <h4 class="font-bold text-slate-800 text-sm">${cB.name}飲食文化風格</h4>
+                </div>
+                <p class="text-xs text-slate-600 mb-2">${cB.style}</p>
+                <div class="text-[11px] text-slate-500">
+                    <span class="font-bold text-teal-600">特色食材/風味：</span>${cB.additions.join('、')}
+                </div>
+            `;
+        }
+
+        function populateFormulaDropdowns() {
+            const cA = countriesData[state.countryA];
+            const cB = countriesData[state.countryB];
+
+            document.getElementById('label-country-a-sub').innerText = cA.name;
+            document.getElementById('label-country-b-sub').innerText = cB.name;
+
+            // Sub Base (Country A Bases)
+            const subBaseSelect = document.getElementById('sub-base-select');
+            subBaseSelect.innerHTML = cA.bases.map(b => `<option value="${b}">${cA.name} - ${b}</option>`).join('');
+
+            // Sub Target (Country B Bases/Ingredients)
+            const subTargetSelect = document.getElementById('sub-target-select');
+            subTargetSelect.innerHTML = cB.bases.map(b => `<option value="${b}">${cB.name} - ${b}</option>`).join('');
+
+            // Addition Features (Country A or B options + general)
+            const addFeatureSelect = document.getElementById('add-feature-select');
+            const allAdditions = [...cB.additions, ...cA.additions];
+            addFeatureSelect.innerHTML = allAdditions.map(a => `<option value="${a}">${a}</option>`).join('');
+
+            // Cooking Techniques
+            const techniqueSelect = document.getElementById('technique-select');
+            const allTechniques = [...new Set([...cA.techniques, ...cB.techniques])];
+            techniqueSelect.innerHTML = allTechniques.map(t => `<option value="${t}">${t}</option>`).join('');
+        }
+
+        function updateFormulaSummary() {
+            state.subBase = document.getElementById('sub-base-select').value;
+            state.subTarget = document.getElementById('sub-target-select').value;
+            state.addFeature = document.getElementById('add-feature-select').value;
+            state.technique = document.getElementById('technique-select').value;
+
+            const cA = countriesData[state.countryA];
+            const cB = countriesData[state.countryB];
+
+            const previewText = `
+                這道融合料理以 <strong>${cA.name}</strong> 的傳統結構為核心，運用了<span class="text-orange-600 font-bold">【替代法則】</span>以 <strong>${state.subTarget}</strong> 替換了原本的 <strong>${state.subBase}</strong>；
+                並透過<span class="text-teal-600 font-bold">【添加法則】</span>加入了標誌性的 <strong>${state.addFeature}</strong>；
+                最後採用<span class="text-purple-600 font-bold">【料理法則】</span>以 <strong>${state.technique}</strong> 方式完成烹調！
+            `;
+            document.getElementById('formula-preview-text').innerHTML = previewText;
+        }
+
+        function goToStep(stepNum) {
+            state.currentStep = stepNum;
+
+            // Hide all steps
+            document.getElementById('step-1').classList.add('hidden');
+            document.getElementById('step-2').classList.add('hidden');
+            document.getElementById('step-3').classList.add('hidden');
+            document.getElementById('step-result').classList.add('hidden');
+
+            // Reset buttons visual
+            for (let i = 1; i <= 3; i++) {
+                const btn = document.getElementById(`step-btn-${i}`);
+                btn.className = "border-2 border-slate-200 bg-white rounded-xl p-3 flex flex-col items-center opacity-60 transition-all cursor-pointer";
+            }
+
+            // Highlight active button
+            if (stepNum <= 3) {
+                const activeBtn = document.getElementById(`step-btn-${stepNum}`);
+                activeBtn.className = "step-active border-2 rounded-xl p-3 flex flex-col items-center transition-all cursor-pointer";
+            }
+
+            // Show selected step
+            if (stepNum === 1) document.getElementById('step-1').classList.remove('hidden');
+            if (stepNum === 2) document.getElementById('step-2').classList.remove('hidden');
+            if (stepNum === 3) document.getElementById('step-3').classList.remove('hidden');
+            if (stepNum === 4) document.getElementById('step-result').classList.remove('hidden');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function validateAndGoToStep(nextStep) {
+            if (nextStep === 2) {
+                if (state.countryA === state.countryB) {
+                    alert('請選擇兩個不同的國家！');
+                    return;
+                }
+            }
+            goToStep(nextStep);
+        }
+
+        function generateFinalCard() {
+            const dishName = document.getElementById('dish-name-input').value.trim();
+            const chefName = document.getElementById('chef-name-input').value.trim();
+            const concept = document.getElementById('dish-concept-input').value.trim();
+
+            if (!dishName) {
+                alert('請為您的融合料理命名！');
+                return;
+            }
+            if (!chefName) {
+                alert('請填寫主廚姓名或暱稱！');
+                return;
+            }
+            if (!concept) {
+                alert('請簡短填寫跨文化交流理念！');
+                return;
+            }
+
+            state.dishName = dishName;
+            state.chefName = chefName;
+            state.concept = concept;
+
+            const cA = countriesData[state.countryA];
+            const cB = countriesData[state.countryB];
+
+            // Fill Result Card
+            document.getElementById('card-dish-name').innerText = state.dishName;
+            document.getElementById('card-chef-name').innerText = `主廚：${state.chefName}`;
+            document.getElementById('card-concept').innerText = `「${state.concept}」`;
+            document.getElementById('card-random-id').innerText = Math.floor(1000 + Math.random() * 9000);
+
+            document.getElementById('card-flag-a').innerText = cA.flag;
+            document.getElementById('card-country-a').innerText = cA.name;
+            document.getElementById('card-flag-b').innerText = cB.flag;
+            document.getElementById('card-country-b').innerText = cB.name;
+
+            document.getElementById('card-rule-sub').innerText = `${state.subBase} ➔ ${state.subTarget}`;
+            document.getElementById('card-rule-add').innerText = state.addFeature;
+            document.getElementById('card-rule-tech').innerText = state.technique;
+
+            // Score Logic Evaluation
+            let scoreBadge = "A+";
+            let scoreTitle = "高脈絡尊重之融合料理";
+            let scoreDesc = "成功掌握文化符碼與風味互補法則，符合無國界世界美食展展出標準！";
+
+            if (concept.length < 15) {
+                scoreBadge = "B+";
+                scoreTitle = "具潛力的實驗創作";
+                scoreDesc = "料理法則運用正確，理念若能補充更多文化交流情境會更加完美！";
+            }
+
+            document.getElementById('fusion-score-badge').innerText = scoreBadge;
+            document.getElementById('score-title').innerText = scoreTitle;
+            document.getElementById('score-desc').innerText = scoreDesc;
+
+            goToStep(4);
+        }
+
+        function downloadCardAsImage() {
+            const cardElement = document.getElementById('digital-dish-card');
+            html2canvas(cardElement, {
+                scale: 2,
+                backgroundColor: null,
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `${state.dishName}_跨文化創意菜卡.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+
+        function resetGame() {
+            document.getElementById('dish-name-input').value = '';
+            document.getElementById('chef-name-input').value = '';
+            document.getElementById('dish-concept-input').value = '';
+            goToStep(1);
+        }
+
+        function openTeacherModal() {
+            document.getElementById('teacher-modal').classList.remove('hidden');
+        }
+
+        function closeTeacherModal() {
+            document.getElementById('teacher-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
